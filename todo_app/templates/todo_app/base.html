@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'todo_app/todo_app.css' %}"/>
+    <title>Todos</title>
+</head>
+<body>
+    <p>Welcome {{ user }} - <a href="{% url 'login_app:logout' %}">Logout</a> - <a href="{% url 'login_app:delete_account' %}">Delete Account</a></p>
+    <hr>
+    {% block content %}
+    {% endblock %}
+    {% block footer %}
+    {% endblock %}
+</body>
+</html>
