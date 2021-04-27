@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login as dj_login, logout as dj_lo
 from django.http import HttpResponseRedirect
 from .models import PasswordResetRequest
 from django.contrib.auth.decorators import login_required
+import django_rq
+from . messaging import email_message
 
 
 def login(request):
@@ -46,7 +48,10 @@ def password_reset_request(request):
             prr = PasswordResetRequest()
             prr.user = user
             prr.save()
-            print(prr)
+            django_rq.enqueue(email_message, {
+               'token' : prr.token,
+               'email' : prr.user.email,
+               })
             return HttpResponseRedirect(reverse('login_app:password_reset'))
 
     return render(request, 'login_app/password_reset_request.html')
@@ -108,3 +113,4 @@ def delete_account(request):
             else:
                 print("fail delete")
     return render(request, 'login_app/delete_account.html')
+
